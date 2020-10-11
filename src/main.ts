@@ -4,7 +4,7 @@ import AliyunOSSClient, { getUploadFileList } from './aliyunOSS';
 const homeDir = process.env.HOME || require('os').homedir();
 const aliyunConfigPath = path.resolve(
   homeDir,
-  './.aliyun-uploader/aliyun-oss-config.json'
+  './.aliyun-uploader/config/aliyun-oss-config.json'
 );
 const aliyunConfig = require(aliyunConfigPath);
 
