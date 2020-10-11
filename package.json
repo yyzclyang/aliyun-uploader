@@ -5,7 +5,7 @@
   "author": "yyzclyang",
   "license": "MIT",
   "bin": {
-    "up": "dist/cli.js"
+    "aup": "dist/cli.js"
   },
   "scripts": {
     "start": "ts-node-dev src/main.ts",
