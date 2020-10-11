@@ -14,6 +14,14 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yyzclyang/aliyun-uploader.git"
+  },
+  "homepage": "https://github.com/yyzclyang/aliyun-uploader#readme",
+  "bugs": {
+    "url": "https://github.com/yyzclyang/aliyun-uploader/issues"
+  },
   "dependencies": {
     "ali-oss": "^6.11.2",
     "fs-extra": "^9.0.1",
