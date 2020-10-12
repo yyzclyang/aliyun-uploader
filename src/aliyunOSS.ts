@@ -2,6 +2,8 @@ import OSS from 'ali-oss';
 import fs from 'fs-extra';
 import { getLocalFileList } from './utils';
 
+export { Options as OSSOptions } from 'ali-oss';
+
 export interface UploadFile {
   path: string;
   name: string;

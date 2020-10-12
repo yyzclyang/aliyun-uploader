@@ -2,7 +2,7 @@ import inquirer from 'inquirer';
 import fs from 'fs-extra';
 import path from 'path';
 import glob from 'glob';
-import { UploadFile } from './aliyunOSS';
+import { OSSOptions, UploadFile } from './aliyunOSS';
 
 export function getLocalFileList(
   cdnFolder: string,
@@ -16,13 +16,13 @@ export function getLocalFileList(
   });
 }
 
-export function getAliyunOSSConfig() {
+export function getAliyunOSSConfig(): Promise<OSSOptions> {
   const homeDir = process.env.HOME || require('os').homedir();
   const aliyunConfigPath = path.resolve(
     homeDir,
     './.aliyun-uploader/config/aliyun-oss-config.json'
   );
-  return require(aliyunConfigPath);
+  return fs.readJson(aliyunConfigPath);
 }
 
 export async function getRightLocalFileFolder(
