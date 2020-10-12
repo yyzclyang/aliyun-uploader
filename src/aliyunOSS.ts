@@ -14,7 +14,7 @@ export default class AliyunOSSClient {
   private oss: OSS;
 
   uploadLocalFileToCDN = (cdnFolder: string, localFileFolder: string) => {
-    const localFileList = getLocalFileList(localFileFolder, cdnFolder);
+    const localFileList = getLocalFileList(cdnFolder, localFileFolder);
     return Promise.all(
       localFileList.map(file => {
         const stream = fs.createReadStream(file.path);

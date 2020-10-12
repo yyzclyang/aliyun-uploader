@@ -5,8 +5,8 @@ import glob from 'glob';
 import { UploadFile } from './aliyunOSS';
 
 export function getLocalFileList(
-  localFileFolder: string,
-  cdnFolder: string
+  cdnFolder: string,
+  localFileFolder: string
 ): Array<UploadFile> {
   return glob.sync(`${localFileFolder}/**/*`, { nodir: true }).map(path => {
     return {
