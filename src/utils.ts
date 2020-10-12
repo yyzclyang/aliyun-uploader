@@ -5,15 +5,17 @@ import glob from 'glob';
 import { OSSOptions, UploadFile } from './aliyunOSS';
 
 export function getLocalFileList(
-  cdnFolder: string,
+  OSSFolder: string,
   localFileFolder: string
 ): Array<UploadFile> {
-  return glob.sync(`${localFileFolder}/**/*`, { nodir: true }).map(path => {
-    return {
-      name: path.replace(localFileFolder, cdnFolder),
-      path: path
-    };
-  });
+  return glob
+    .sync(path.resolve(localFileFolder, '**/*'), { nodir: true })
+    .map(localFilePath => {
+      return {
+        OSSPath: localFilePath.replace(localFileFolder, OSSFolder),
+        localPath: localFilePath
+      };
+    });
 }
 
 export function getAliyunOSSConfig(): Promise<OSSOptions> {

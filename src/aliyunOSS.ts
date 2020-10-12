@@ -5,8 +5,8 @@ import { getLocalFileList } from './utils';
 export { Options as OSSOptions } from 'ali-oss';
 
 export interface UploadFile {
-  path: string;
-  name: string;
+  OSSPath: string;
+  localPath: string;
 }
 
 export default class AliyunOSSClient {
@@ -15,12 +15,13 @@ export default class AliyunOSSClient {
   }
   private oss: OSS;
 
-  uploadLocalFileToCDN = (cdnFolder: string, localFileFolder: string) => {
-    const localFileList = getLocalFileList(cdnFolder, localFileFolder);
+  uploadLocalFileToAliyunOSS = (OSSFolder: string, localFileFolder: string) => {
+    const localFileList = getLocalFileList(OSSFolder, localFileFolder);
+
     return Promise.all(
       localFileList.map(file => {
-        const stream = fs.createReadStream(file.path);
-        return this.oss.putStream(file.name, stream);
+        const stream = fs.createReadStream(file.localPath);
+        return this.oss.putStream(file.OSSPath, stream);
       })
     );
   };

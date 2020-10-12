@@ -8,10 +8,10 @@ function main() {
 
   // 上传文件
   program
-    .command('upload <cdnFolder> [localFileFolder]', { isDefault: true })
-    .description('upload local folder files')
-    .action((cdnFolder, localFileFolder) => {
-      uploader(cdnFolder, localFileFolder);
+    .command('upload <OSSFolder> [localFileFolder]', { isDefault: true })
+    .description('upload local folder files to aliyun OSS')
+    .action((OSSFolder, localFileFolder) => {
+      uploader(OSSFolder, localFileFolder);
     });
 
   program.parse(process.argv);
