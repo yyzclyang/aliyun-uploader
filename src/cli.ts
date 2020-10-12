@@ -1,15 +1,20 @@
 #!/usr/bin/env node
-import fs from 'fs-extra';
-import uploader from './main';
+import program from 'commander';
+import { uploader } from './main';
+const pkg = require('../package.json');
 
-const [, , cdnFolder, fileFolder] = process.argv;
+function main() {
+  program.version(pkg.version);
 
-if (cdnFolder) {
-  if (fileFolder && !fs.pathExistsSync(fileFolder)) {
-    console.log('请输入正确的本地文件夹路径，不输入则选取当前文件夹。');
-  } else {
-    uploader(cdnFolder, fileFolder);
-  }
-} else {
-  console.log('请输入正确的 cdn 文件夹名称！');
+  // 上传文件
+  program
+    .command('upload <cdnFolder> [localFileFolder]')
+    .description('upload local folder files')
+    .action((cdnFolder, localFileFolder) => {
+      uploader(cdnFolder, localFileFolder);
+    });
+
+  program.parse(process.argv);
 }
+
+main();

@@ -1,6 +1,6 @@
 import OSS from 'ali-oss';
-import glob from 'glob';
 import fs from 'fs-extra';
+import { getLocalFileList } from './utils';
 
 export interface UploadFile {
   path: string;
@@ -13,24 +13,13 @@ export default class AliyunOSSClient {
   }
   private oss: OSS;
 
-  uploadFile = async (fileList: Array<UploadFile>) => {
+  uploadLocalFileToCDN = (cdnFolder: string, localFileFolder: string) => {
+    const localFileList = getLocalFileList(localFileFolder, cdnFolder);
     return Promise.all(
-      fileList.map((file) => {
+      localFileList.map(file => {
         const stream = fs.createReadStream(file.path);
         return this.oss.putStream(file.name, stream);
       })
     );
   };
-}
-
-export function getUploadFileList(
-  localFolder: string,
-  cdnFolder: string
-): Array<UploadFile> {
-  return glob.sync(`${localFolder}/**/*`, { nodir: true }).map((path) => {
-    return {
-      name: path.replace(localFolder, cdnFolder),
-      path: path
-    };
-  });
 }
