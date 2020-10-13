@@ -8,8 +8,7 @@
 out
 gen
 .vscode
-/src/config
-/dist/
+/lib/
 
 ### Node template
 # Logs

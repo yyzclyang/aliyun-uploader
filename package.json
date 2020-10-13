@@ -1,18 +1,18 @@
 {
   "name": "aliyun-uploader",
   "version": "0.0.2",
-  "main": "dist/main.js",
+  "main": "lib/main.js",
   "author": "yyzclyang",
   "license": "MIT",
   "bin": {
-    "aup": "dist/cli.js"
+    "aup": "lib/cli.js"
   },
   "scripts": {
     "start": "ts-node-dev src/cli.ts",
     "build": "tsc"
   },
   "files": [
-    "dist"
+    "lib"
   ],
   "repository": {
     "type": "git",
