@@ -1,12 +1,13 @@
 import AliyunOSSClient from './aliyunOSS';
-import { getAliyunOSSConfig, getRightLocalFileFolder } from './utils';
+import { getAliyunOSSOptions } from './utils/aliyunOSSUtil';
+import { getRightLocalFileFolder } from './utils/inputUtil';
 
 export function uploader(OSSFolder: string, localFileFolder?: string) {
-  getAliyunOSSConfig().then(
-    aliyunConfig => {
+  getAliyunOSSOptions().then(
+    aliyunOSSOptions => {
       return getRightLocalFileFolder(localFileFolder).then(
         rightLocalFileFolder => {
-          return new AliyunOSSClient(aliyunConfig)
+          return new AliyunOSSClient(aliyunOSSOptions)
             .uploadLocalFileToAliyunOSS(OSSFolder, rightLocalFileFolder)
             .then(
               _ => console.log('upload success!'),

@@ -1,13 +1,6 @@
 import OSS from 'ali-oss';
 import fs from 'fs-extra';
-import { getLocalFileList } from './utils';
-
-export { Options as OSSOptions } from 'ali-oss';
-
-export interface UploadFile {
-  OSSPath: string;
-  localPath: string;
-}
+import { getLocalFilePathList } from './utils/pathUtil';
 
 export default class AliyunOSSClient {
   constructor(options: OSS.Options) {
@@ -16,12 +9,12 @@ export default class AliyunOSSClient {
   private oss: OSS;
 
   uploadLocalFileToAliyunOSS = (OSSFolder: string, localFileFolder: string) => {
-    const localFileList = getLocalFileList(OSSFolder, localFileFolder);
+    const localFilePathList = getLocalFilePathList(OSSFolder, localFileFolder);
 
     return Promise.all(
-      localFileList.map(file => {
-        const stream = fs.createReadStream(file.localPath);
-        return this.oss.putStream(file.OSSPath, stream);
+      localFilePathList.map(filePath => {
+        const stream = fs.createReadStream(filePath.localPath);
+        return this.oss.putStream(filePath.OSSPath, stream);
       })
     );
   };
