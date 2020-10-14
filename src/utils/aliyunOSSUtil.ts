@@ -8,16 +8,18 @@ import {
   OSSOptions
 } from './interface';
 
+export function getAliyunOSSConfig(): Promise<AliyunOSSConfig> {
+  return fs.readJson(getAliyunOSSConfigPath());
+}
+
 export function getAliyunOSS(): Promise<AliyunOSS> {
-  return fs
-    .readJson(getAliyunOSSConfigPath())
-    .then((aliyunOSSConfig: AliyunOSSConfig) => {
-      const { current, aliyunOSSList } = aliyunOSSConfig;
-      const currentOSS = current
-        ? aliyunOSSList.find(aliyunOSS => aliyunOSS.OSSName === current)
-        : aliyunOSSList[0];
-      return currentOSS ?? Promise.reject();
-    });
+  return getAliyunOSSConfig().then((aliyunOSSConfig: AliyunOSSConfig) => {
+    const { current, aliyunOSSList } = aliyunOSSConfig;
+    const currentOSS = current
+      ? aliyunOSSList.find(aliyunOSS => aliyunOSS.OSSName === current)
+      : aliyunOSSList[0];
+    return currentOSS ?? Promise.reject();
+  });
 }
 
 export function getAliyunOSSAccessKey(): Promise<AccessKey> {
