@@ -5,7 +5,7 @@ import {
   getAliyunOSS,
   getAliyunOSSOptions
 } from './utils/aliyunOSSUtil';
-import { getRightLocalFileFolder } from './utils/inputUtil';
+import { getRightLocalFileFolder } from './utils/inquirerUtil';
 import { logAliyunOSSInfo, logAliyunOSSList } from './utils/logUtil';
 
 export function uploader(OSSFolder: string, localFileFolder?: string) {
