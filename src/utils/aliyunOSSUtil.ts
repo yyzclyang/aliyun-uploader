@@ -4,12 +4,17 @@ import {
   AccessKey,
   AliyunOSS,
   AliyunOSSConfig,
+  AliyunOSSInputInfo,
   BucketInfo,
   OSSOptions
 } from './interface';
 
 export function getAliyunOSSConfig(): Promise<AliyunOSSConfig> {
   return fs.readJson(getAliyunOSSConfigPath());
+}
+
+export function saveAliyunOSSConfig(aliyunOSSConfig: AliyunOSSConfig) {
+  return fs.writeJSON(getAliyunOSSConfigPath(), aliyunOSSConfig);
 }
 
 export function getAliyunOSS(): Promise<AliyunOSS> {
@@ -42,4 +47,23 @@ export function getAliyunOSSOptions(): Promise<OSSOptions> {
       return { ...accessKey, ...bucketInfo };
     }
   );
+}
+
+export function saveAliyunOSSInfo({
+  OSSName,
+  accessKeyId,
+  accessKeySecret
+}: AliyunOSSInputInfo) {
+  return getAliyunOSSConfig().then(aliyunOSSConfig => {
+    aliyunOSSConfig.aliyunOSSList.push({
+      OSSName: OSSName,
+      accessKey: {
+        accessKeyId: accessKeyId,
+        accessKeySecret: accessKeySecret
+      },
+      currentBucket: '',
+      bucketList: []
+    });
+    return saveAliyunOSSConfig(aliyunOSSConfig);
+  });
 }

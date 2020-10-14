@@ -24,3 +24,8 @@ export interface AliyunOSSConfig {
   current: string;
   aliyunOSSList: Array<AliyunOSS>;
 }
+export interface AliyunOSSInputInfo {
+  OSSName: string;
+  accessKeyId: string;
+  accessKeySecret: string;
+}

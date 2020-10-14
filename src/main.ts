@@ -3,9 +3,13 @@ import AliyunOSSClient from './aliyunOSS';
 import {
   getAliyunOSSConfig,
   getAliyunOSS,
-  getAliyunOSSOptions
+  getAliyunOSSOptions,
+  saveAliyunOSSInfo
 } from './utils/aliyunOSSUtil';
-import { getRightLocalFileFolder } from './utils/inquirerUtil';
+import {
+  getAliyunOSSInputInfo,
+  getRightLocalFileFolder
+} from './utils/inquirerUtil';
 import { logAliyunOSSInfo, logAliyunOSSList } from './utils/logUtil';
 
 export function uploader(OSSFolder: string, localFileFolder?: string) {
@@ -39,5 +43,14 @@ export function showAllOSS() {
   getAliyunOSSConfig().then(aliyunOSSConfig => {
     console.log('all OSS list:');
     logAliyunOSSList(aliyunOSSConfig);
+  });
+}
+
+export function addOSSInfo() {
+  getAliyunOSSInputInfo().then(OSSInfo => {
+    saveAliyunOSSInfo(OSSInfo).then(
+      _ => console.log('save success!'),
+      _ => console.log('save fail!')
+    );
   });
 }

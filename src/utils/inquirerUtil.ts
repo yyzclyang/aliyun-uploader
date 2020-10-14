@@ -1,5 +1,7 @@
 import fs from 'fs-extra';
 import inquirer from 'inquirer';
+import { AliyunOSSInputInfo } from './interface';
+import { getAliyunOSSConfig } from './aliyunOSSUtil';
 
 export async function getRightLocalFileFolder(
   localFileFolder?: string
@@ -28,4 +30,47 @@ export async function getRightLocalFileFolder(
       .then(({ localFileFolder }) => localFileFolder || process.cwd())
       .catch(_ => undefined);
   }
+}
+
+export function getAliyunOSSInputInfo(): Promise<AliyunOSSInputInfo> {
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'OSSName',
+      message: '请输入OSS的名称:',
+      validate(OSSName: string) {
+        return getAliyunOSSConfig().then(({ aliyunOSSList }) => {
+          if (aliyunOSSList.some(aliyunOSS => aliyunOSS.OSSName === OSSName)) {
+            return `${OSSName}已存在，请输入其他名字`;
+          } else {
+            return true;
+          }
+        });
+      }
+    },
+    {
+      type: 'input',
+      name: 'accessKeyId',
+      message: '请输入OSS的accessKeyId:',
+      validate(accessKeyId: string) {
+        if (accessKeyId) {
+          return true;
+        } else {
+          return 'accessKeyId不能为空';
+        }
+      }
+    },
+    {
+      type: 'input',
+      name: 'accessKeySecret',
+      message: '请输入OSS的accessKeySecret:',
+      validate(accessKeySecret: string) {
+        if (accessKeySecret) {
+          return true;
+        } else {
+          return 'accessKeySecret不能为空';
+        }
+      }
+    }
+  ]);
 }

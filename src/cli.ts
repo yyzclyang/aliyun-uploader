@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import program from 'commander';
 const pkg = require('../package.json');
-import { showAllOSS, showCurrentOSS, uploader } from './main';
+import { addOSSInfo, showAllOSS, showCurrentOSS, uploader } from './main';
 
 function main() {
   program.version(pkg.version);
@@ -17,6 +17,13 @@ function main() {
       } else {
         showCurrentOSS();
       }
+    });
+  // 添加 OSS 信息
+  program
+    .command('add-oss')
+    .description('add OSS info')
+    .action(_ => {
+      addOSSInfo();
     });
 
   // 上传文件
