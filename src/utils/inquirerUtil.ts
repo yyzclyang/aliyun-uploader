@@ -35,7 +35,8 @@ export async function getRightLocalFileFolder(
 export function getAliyunOSSInputInfo(
   defaultOSSName = '',
   defaultAccessKeyId = '',
-  defaultAccessKeySecret = ''
+  defaultAccessKeySecret = '',
+  OSSNameUnique = true
 ): Promise<AliyunOSSInputInfo> {
   return inquirer.prompt([
     {
@@ -44,13 +45,21 @@ export function getAliyunOSSInputInfo(
       message: '请输入OSS的名称:',
       default: defaultOSSName,
       validate(OSSName: string) {
-        return getAliyunOSSConfig().then(({ aliyunOSSList }) => {
-          if (aliyunOSSList.some(aliyunOSS => aliyunOSS.OSSName === OSSName)) {
-            return `${OSSName}已存在，请输入其他名字`;
-          } else {
-            return true;
-          }
-        });
+        if (!OSSName) {
+          return 'OSSName不能为空';
+        }
+        if (OSSNameUnique) {
+          return getAliyunOSSConfig().then(({ aliyunOSSList }) => {
+            if (
+              aliyunOSSList.some(aliyunOSS => aliyunOSS.OSSName === OSSName)
+            ) {
+              return `${OSSName}已存在，请输入其他名字`;
+            } else {
+              return true;
+            }
+          });
+        }
+        return true;
       }
     },
     {
@@ -80,4 +89,16 @@ export function getAliyunOSSInputInfo(
       }
     }
   ]);
+}
+
+export function showAliyunOSSList(aliyunOSSList: Array<AliyunOSS>) {
+  return inquirer.prompt({
+    type: 'list',
+    name: 'OSSName',
+    message: '选择你想要编辑的 OSS?',
+    choices: [
+      { name: '退出', value: '' },
+      ...aliyunOSSList.map(aliyunOSS => aliyunOSS.OSSName)
+    ]
+  });
 }

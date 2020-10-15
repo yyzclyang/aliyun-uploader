@@ -54,3 +54,21 @@ export function addAliyunOSS(aliyunOSS: AliyunOSS) {
     return saveAliyunOSSConfig(aliyunOSSConfig);
   });
 }
+
+export function editAliyunOSS(
+  newAliyunOSS: AliyunOSS,
+  previousOSSName: string
+) {
+  return getAliyunOSSConfig().then(aliyunOSSConfig => {
+    const newAliyunConfig = {
+      current:
+        aliyunOSSConfig.current === previousOSSName
+          ? newAliyunOSS.OSSName
+          : aliyunOSSConfig.current,
+      aliyunOSSList: aliyunOSSConfig.aliyunOSSList.map(aliyunOSS =>
+        aliyunOSS.OSSName === previousOSSName ? newAliyunOSS : aliyunOSS
+      )
+    };
+    return saveAliyunOSSConfig(newAliyunConfig);
+  });
+}
