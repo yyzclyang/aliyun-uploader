@@ -72,3 +72,19 @@ export function editAliyunOSS(
     return saveAliyunOSSConfig(newAliyunConfig);
   });
 }
+
+export function deleteAliyunOSS(OSSName: string) {
+  return getAliyunOSSConfig().then(aliyunOSSConfig => {
+    const newAliyunOSSList = aliyunOSSConfig.aliyunOSSList.filter(
+      aliyunOSS => aliyunOSS.OSSName !== OSSName
+    );
+    const newAliyunConfig = {
+      current:
+        aliyunOSSConfig.current === OSSName
+          ? newAliyunOSSList[0]?.OSSName ?? ''
+          : aliyunOSSConfig.current,
+      aliyunOSSList: newAliyunOSSList
+    };
+    return saveAliyunOSSConfig(newAliyunConfig);
+  });
+}

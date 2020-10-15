@@ -4,7 +4,8 @@ import {
   getAliyunOSS,
   getAliyunOSSOptions,
   addAliyunOSS,
-  editAliyunOSS
+  editAliyunOSS,
+  deleteAliyunOSS
 } from './utils/aliyunOSSUtil';
 import {
   getAliyunOSSInputInfo,
@@ -90,6 +91,19 @@ export function editOSS() {
             _ => console.log('edit fail!')
           );
         });
+      }
+    });
+  });
+}
+
+export function deleteOSS() {
+  getAliyunOSSConfig().then(({ aliyunOSSList }) => {
+    showAliyunOSSList(aliyunOSSList).then(({ OSSName: selectedOSSName }) => {
+      if (selectedOSSName) {
+        deleteAliyunOSS(selectedOSSName).then(
+          _ => console.log('delete success!'),
+          _ => console.log('delete fail!')
+        );
       }
     });
   });

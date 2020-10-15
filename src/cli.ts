@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 import program from 'commander';
 const pkg = require('../package.json');
-import { addOSS, editOSS, showAllOSS, showCurrentOSS, uploader } from './main';
+import {
+  addOSS,
+  deleteOSS,
+  editOSS,
+  showAllOSS,
+  showCurrentOSS,
+  uploader
+} from './main';
 
 function main() {
   program.version(pkg.version);
@@ -31,6 +38,13 @@ function main() {
     .description('edit OSS info')
     .action(_ => {
       editOSS();
+    });
+  // 删除 OSS 信息
+  program
+    .command('delete-oss')
+    .description('delete OSS info')
+    .action(_ => {
+      deleteOSS();
     });
 
   // 上传文件
