@@ -4,7 +4,6 @@ import {
   AccessKey,
   AliyunOSS,
   AliyunOSSConfig,
-  AliyunOSSInputInfo,
   BucketInfo,
   OSSOptions
 } from './interface';
@@ -49,21 +48,9 @@ export function getAliyunOSSOptions(): Promise<OSSOptions> {
   );
 }
 
-export function saveAliyunOSSInfo({
-  OSSName,
-  accessKeyId,
-  accessKeySecret
-}: AliyunOSSInputInfo) {
+export function addAliyunOSS(aliyunOSS: AliyunOSS) {
   return getAliyunOSSConfig().then(aliyunOSSConfig => {
-    aliyunOSSConfig.aliyunOSSList.push({
-      OSSName: OSSName,
-      accessKey: {
-        accessKeyId: accessKeyId,
-        accessKeySecret: accessKeySecret
-      },
-      currentBucket: '',
-      bucketList: []
-    });
+    aliyunOSSConfig.aliyunOSSList.push(aliyunOSS);
     return saveAliyunOSSConfig(aliyunOSSConfig);
   });
 }

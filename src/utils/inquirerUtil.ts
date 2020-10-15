@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import inquirer from 'inquirer';
-import { AliyunOSSInputInfo } from './interface';
+import { AliyunOSS, AliyunOSSInputInfo } from './interface';
 import { getAliyunOSSConfig } from './aliyunOSSUtil';
 
 export async function getRightLocalFileFolder(
@@ -32,12 +32,17 @@ export async function getRightLocalFileFolder(
   }
 }
 
-export function getAliyunOSSInputInfo(): Promise<AliyunOSSInputInfo> {
+export function getAliyunOSSInputInfo(
+  defaultOSSName = '',
+  defaultAccessKeyId = '',
+  defaultAccessKeySecret = ''
+): Promise<AliyunOSSInputInfo> {
   return inquirer.prompt([
     {
       type: 'input',
       name: 'OSSName',
       message: '请输入OSS的名称:',
+      default: defaultOSSName,
       validate(OSSName: string) {
         return getAliyunOSSConfig().then(({ aliyunOSSList }) => {
           if (aliyunOSSList.some(aliyunOSS => aliyunOSS.OSSName === OSSName)) {
@@ -52,6 +57,7 @@ export function getAliyunOSSInputInfo(): Promise<AliyunOSSInputInfo> {
       type: 'input',
       name: 'accessKeyId',
       message: '请输入OSS的accessKeyId:',
+      default: defaultAccessKeyId,
       validate(accessKeyId: string) {
         if (accessKeyId) {
           return true;
@@ -64,6 +70,7 @@ export function getAliyunOSSInputInfo(): Promise<AliyunOSSInputInfo> {
       type: 'input',
       name: 'accessKeySecret',
       message: '请输入OSS的accessKeySecret:',
+      default: defaultAccessKeySecret,
       validate(accessKeySecret: string) {
         if (accessKeySecret) {
           return true;

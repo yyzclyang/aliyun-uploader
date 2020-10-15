@@ -4,11 +4,12 @@ import {
   getAliyunOSSConfig,
   getAliyunOSS,
   getAliyunOSSOptions,
-  saveAliyunOSSInfo
+  addAliyunOSS
 } from './utils/aliyunOSSUtil';
 import {
   getAliyunOSSInputInfo,
-  getRightLocalFileFolder
+  getRightLocalFileFolder,
+  showAliyunOSSList
 } from './utils/inquirerUtil';
 import { logAliyunOSSInfo, logAliyunOSSList } from './utils/logUtil';
 
@@ -46,9 +47,18 @@ export function showAllOSS() {
   });
 }
 
-export function addOSSInfo() {
-  getAliyunOSSInputInfo().then(OSSInfo => {
-    saveAliyunOSSInfo(OSSInfo).then(
+export function addOSS() {
+  getAliyunOSSInputInfo().then(({ OSSName, accessKeyId, accessKeySecret }) => {
+    const aliyunOSS = {
+      OSSName,
+      accessKey: {
+        accessKeyId,
+        accessKeySecret
+      },
+      currentBucket: '',
+      bucketList: []
+    };
+    addAliyunOSS(aliyunOSS).then(
       _ => console.log('save success!'),
       _ => console.log('save fail!')
     );
