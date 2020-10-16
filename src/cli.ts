@@ -5,7 +5,9 @@ import {
   addOSS,
   deleteOSS,
   editOSS,
+  showAllBucket,
   showAllOSS,
+  showCurrentBucket,
   showCurrentOSS,
   uploader
 } from './main';
@@ -45,6 +47,19 @@ function main() {
     .description('delete OSS info')
     .action(_ => {
       deleteOSS();
+    });
+
+  // 展示 Bucket 信息
+  program
+    .command('show-bk')
+    .description('show bucket info')
+    .option('-a, --all', 'show all bucket info')
+    .action(({ all }) => {
+      if (all) {
+        showAllBucket();
+      } else {
+        showCurrentBucket();
+      }
     });
 
   // 上传文件

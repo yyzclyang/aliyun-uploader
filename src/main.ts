@@ -5,14 +5,20 @@ import {
   getAliyunOSSOptions,
   addAliyunOSS,
   editAliyunOSS,
-  deleteAliyunOSS
+  deleteAliyunOSS,
+  getAliyunOSSBucket
 } from './utils/aliyunOSSUtil';
 import {
   getAliyunOSSInputInfo,
   getRightLocalFileFolder,
   showAliyunOSSList
 } from './utils/inquirerUtil';
-import { logAliyunOSSInfo, logAliyunOSSList } from './utils/logUtil';
+import {
+  logAliyunOSSInfo,
+  logAliyunOSSList,
+  logBucketInfo,
+  logBucketList
+} from './utils/logUtil';
 import { AliyunOSS } from './utils/interface';
 
 export function uploader(OSSFolder: string, localFileFolder?: string) {
@@ -106,5 +112,20 @@ export function deleteOSS() {
         );
       }
     });
+  });
+}
+
+export function showAllBucket() {
+  getAliyunOSS().then(aliyunOSS => {
+    console.log('all bucket list:');
+    const { bucketList, currentBucket } = aliyunOSS;
+    logBucketList(bucketList, currentBucket);
+  });
+}
+
+export function showCurrentBucket() {
+  getAliyunOSSBucket().then(bucket => {
+    console.log('current bucket info:');
+    logBucketInfo(bucket);
   });
 }

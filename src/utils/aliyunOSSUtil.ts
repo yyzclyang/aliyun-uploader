@@ -81,3 +81,13 @@ export function deleteAliyunOSS(OSSName: string) {
     return saveAliyunOSSConfig(newAliyunConfig);
   });
 }
+
+export function getAliyunOSSBucket(): Promise<BucketInfo> {
+  return getAliyunOSS().then(aliyunOSS => {
+    const { currentBucket: currentBucketName, bucketList } = aliyunOSS;
+    const currentBucket = currentBucketName
+      ? bucketList.find(bucketInfo => bucketInfo.bucket === currentBucketName)
+      : bucketList[0];
+    return currentBucket ?? Promise.reject();
+  });
+}
