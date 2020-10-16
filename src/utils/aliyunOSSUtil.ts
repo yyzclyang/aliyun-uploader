@@ -1,7 +1,6 @@
 import fs from 'fs-extra';
 import { getAliyunOSSConfigPath } from './pathUtil';
 import {
-  AccessKey,
   AliyunOSS,
   AliyunOSSConfig,
   BucketInfo,
@@ -26,26 +25,20 @@ export function getAliyunOSS(): Promise<AliyunOSS> {
   });
 }
 
-export function getAliyunOSSAccessKey(): Promise<AccessKey> {
-  return getAliyunOSS().then(aliyunOSS => aliyunOSS.accessKey);
-}
-
-export function getAliyunOSSBucket(): Promise<BucketInfo> {
+export function getAliyunOSSOptions(): Promise<OSSOptions> {
   return getAliyunOSS().then(aliyunOSS => {
-    const { currentBucket: currentBucketName, bucketList } = aliyunOSS;
+    const {
+      accessKey,
+      currentBucket: currentBucketName,
+      bucketList
+    } = aliyunOSS;
     const currentBucket = currentBucketName
       ? bucketList.find(bucketInfo => bucketInfo.bucket === currentBucketName)
       : bucketList[0];
-    return currentBucket ?? Promise.reject();
+    return currentBucket
+      ? { ...accessKey, ...currentBucket }
+      : Promise.reject();
   });
-}
-
-export function getAliyunOSSOptions(): Promise<OSSOptions> {
-  return Promise.all([getAliyunOSSAccessKey(), getAliyunOSSBucket()]).then(
-    ([accessKey, bucketInfo]) => {
-      return { ...accessKey, ...bucketInfo };
-    }
-  );
 }
 
 export function addAliyunOSS(aliyunOSS: AliyunOSS) {
