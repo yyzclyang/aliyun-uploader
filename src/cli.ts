@@ -4,6 +4,7 @@ const pkg = require('../package.json');
 import {
   addBucket,
   addOSS,
+  deleteBucket,
   deleteOSS,
   editOSS,
   showAllBucket,
@@ -68,6 +69,13 @@ function main() {
     .description('add bucket info')
     .action(_ => {
       addBucket();
+    });
+  // 删除 Bucket 信息
+  program
+    .command('delete-bk')
+    .description('delete bucket info')
+    .action(_ => {
+      deleteBucket();
     });
 
   // 上传文件

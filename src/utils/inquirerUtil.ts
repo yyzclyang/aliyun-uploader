@@ -136,3 +136,15 @@ export function getAliyunOSSBucketInputInfo(): Promise<BucketInfo> {
     }
   ]);
 }
+
+export function showAliyunOSSBucketList(bucketList: Array<BucketInfo>) {
+  return inquirer.prompt({
+    type: 'list',
+    name: 'bucketName',
+    message: '选择你想要编辑的 bucket?',
+    choices: [
+      { name: '退出', value: '' },
+      ...bucketList.map(({ bucket }) => bucket)
+    ]
+  });
+}

@@ -113,3 +113,31 @@ export function addAliyunOSSBucket(bucketInfo: BucketInfo) {
     });
   });
 }
+
+export function deleteAliyunOSSBucket(bucketName: string) {
+  return getAliyunOSSConfig().then(aliyunOSSConfig => {
+    const { current, aliyunOSSList } = aliyunOSSConfig;
+    return saveAliyunOSSConfig({
+      current,
+      aliyunOSSList: aliyunOSSList.map(aliyunOSS => {
+        if (aliyunOSS.OSSName === current) {
+          const { OSSName, accessKey, currentBucket, bucketList } = aliyunOSS;
+          const newBucketList = bucketList.filter(
+            bucketInfo => bucketInfo.bucket !== bucketName
+          );
+          return {
+            OSSName,
+            accessKey,
+            currentBucket:
+              currentBucket === bucketName
+                ? newBucketList[0]?.bucket ?? ''
+                : currentBucket,
+            bucketList: newBucketList
+          };
+        } else {
+          return aliyunOSS;
+        }
+      })
+    });
+  });
+}

@@ -7,12 +7,14 @@ import {
   editAliyunOSS,
   deleteAliyunOSS,
   getAliyunOSSBucket,
-  addAliyunOSSBucket
+  addAliyunOSSBucket,
+  deleteAliyunOSSBucket
 } from './utils/aliyunOSSUtil';
 import {
   getAliyunOSSBucketInputInfo,
   getAliyunOSSInputInfo,
   getRightLocalFileFolder,
+  showAliyunOSSBucketList,
   showAliyunOSSList
 } from './utils/inquirerUtil';
 import {
@@ -137,6 +139,21 @@ export function addBucket() {
     _ => {
       getAliyunOSSBucketInputInfo().then(bucketInfo => {
         addAliyunOSSBucket(bucketInfo).then(
+          _ => console.log('add success!'),
+          _ => console.log('add fail!')
+        );
+      });
+    },
+    _ => {
+      console.log('请先指定OSS信息');
+    }
+  );
+}
+export function deleteBucket() {
+  getAliyunOSS().then(
+    ({ bucketList }) => {
+      showAliyunOSSBucketList(bucketList).then(({ bucketName }) => {
+        deleteAliyunOSSBucket(bucketName).then(
           _ => console.log('add success!'),
           _ => console.log('add fail!')
         );
