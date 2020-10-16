@@ -91,3 +91,25 @@ export function getAliyunOSSBucket(): Promise<BucketInfo> {
     return currentBucket ?? Promise.reject();
   });
 }
+
+export function addAliyunOSSBucket(bucketInfo: BucketInfo) {
+  return getAliyunOSSConfig().then(aliyunOSSConfig => {
+    const { current, aliyunOSSList } = aliyunOSSConfig;
+    return saveAliyunOSSConfig({
+      current,
+      aliyunOSSList: aliyunOSSList.map(aliyunOSS => {
+        if (aliyunOSS.OSSName === current) {
+          const { OSSName, accessKey, currentBucket, bucketList } = aliyunOSS;
+          return {
+            OSSName,
+            accessKey,
+            currentBucket,
+            bucketList: bucketList.concat(bucketInfo)
+          };
+        } else {
+          return aliyunOSS;
+        }
+      })
+    });
+  });
+}

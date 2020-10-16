@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import inquirer from 'inquirer';
-import { AliyunOSS, AliyunOSSInputInfo } from './interface';
-import { getAliyunOSSConfig } from './aliyunOSSUtil';
+import { AliyunOSS, AliyunOSSInputInfo, BucketInfo } from './interface';
+import { getAliyunOSS, getAliyunOSSConfig } from './aliyunOSSUtil';
 
 export async function getRightLocalFileFolder(
   localFileFolder?: string
@@ -101,4 +101,38 @@ export function showAliyunOSSList(aliyunOSSList: Array<AliyunOSS>) {
       ...aliyunOSSList.map(aliyunOSS => aliyunOSS.OSSName)
     ]
   });
+}
+
+export function getAliyunOSSBucketInputInfo(): Promise<BucketInfo> {
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'bucket',
+      message: '请输入bucket的名称:',
+      validate(bucket: string) {
+        if (!bucket) {
+          return 'bucket名称不能为空';
+        }
+        return getAliyunOSS().then(({ bucketList }) => {
+          if (bucketList.some(bucketInfo => bucketInfo.bucket === bucket)) {
+            return `${bucket}已存在，请输入其他名字`;
+          } else {
+            return true;
+          }
+        });
+      }
+    },
+    {
+      type: 'input',
+      name: 'region',
+      message: '请输入bucket的region:',
+      validate(region: string) {
+        if (region) {
+          return true;
+        } else {
+          return 'region不能为空';
+        }
+      }
+    }
+  ]);
 }

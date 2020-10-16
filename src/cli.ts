@@ -2,6 +2,7 @@
 import program from 'commander';
 const pkg = require('../package.json');
 import {
+  addBucket,
   addOSS,
   deleteOSS,
   editOSS,
@@ -60,6 +61,13 @@ function main() {
       } else {
         showCurrentBucket();
       }
+    });
+  // 添加 Bucket 信息
+  program
+    .command('add-bk')
+    .description('add bucket info')
+    .action(_ => {
+      addBucket();
     });
 
   // 上传文件
