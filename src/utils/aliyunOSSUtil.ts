@@ -63,12 +63,8 @@ export function saveBucketDB(BucketList: Array<BucketDBItem>) {
 }
 
 export function addOSSDBItem(OSS: OSSDBItem) {
-  const OSSDBIsExists = fs.pathExistsSync(getOSSDBPath());
-  if (!OSSDBIsExists) {
-    return saveOSSDB([{ ...OSS, isCurrent: true }]);
-  }
   return getOSSDB().then(OSSList => {
-    OSSList.push(OSS);
+    OSSList.push({ ...OSS, isCurrent: !OSSList.length });
     return saveOSSDB(OSSList);
   });
 }
@@ -96,8 +92,17 @@ export function deleteOSSDBItem(OSSId: string) {
 
 export function addBucketDBItem(bucket: BucketDBItem) {
   return getBucketDB().then(bucketList => {
-    bucketList.push(bucket);
-    return saveBucketDB(bucketList);
+    return getOSSDB().then(OSSList => {
+      if (!OSSList.find(OSS => OSS.isCurrent)?.bucket) {
+        saveOSSDB(
+          OSSList.map(OSS =>
+            OSS.isCurrent ? { ...OSS, bucket: bucket.id } : OSS
+          )
+        );
+      }
+      bucketList.push(bucket);
+      return saveBucketDB(bucketList);
+    });
   });
 }
 
