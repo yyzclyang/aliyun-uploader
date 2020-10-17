@@ -7,6 +7,8 @@ import {
   deleteBucket,
   deleteOSS,
   editOSS,
+  setCurrentBucket,
+  setCurrentOSS,
   showAllBucket,
   showAllOSS,
   showCurrentBucket,
@@ -28,6 +30,13 @@ async function main() {
     await saveBucketDB([]);
   }
 
+  // 设置 OSS
+  program
+    .command('set-oss')
+    .description('set current OSS')
+    .action(() => {
+      setCurrentOSS();
+    });
   // 展示 OSS 信息
   program
     .command('show-oss')
@@ -62,6 +71,13 @@ async function main() {
       deleteOSS();
     });
 
+  // 设置 Bucket
+  program
+    .command('set-bk')
+    .description('set current bucket')
+    .action(() => {
+      setCurrentBucket();
+    });
   // 展示 Bucket 信息
   program
     .command('show-bk')

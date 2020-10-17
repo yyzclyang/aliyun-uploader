@@ -9,7 +9,9 @@ import {
   deleteOSSDBItem,
   editOSSDBItem,
   addBucketDBItem,
-  deleteBucketDBItem
+  deleteBucketDBItem,
+  setCurrentOSSDBItem,
+  setCurrentBucketDBItem
 } from './utils/aliyunOSSUtil';
 import {
   getOSSInputInfo,
@@ -35,6 +37,23 @@ export function uploader(OSSFolder: string, localFileFolder?: string) {
       );
     },
     error => {
+      throw error;
+    }
+  );
+}
+
+export function setCurrentOSS() {
+  getOSSDB().then(
+    OSSList => {
+      showOSSList(OSSList, '设置').then(({ OSSId: selectedOSSId }) => {
+        return setCurrentOSSDBItem(selectedOSSId).then(
+          _ => console.log('set success!'),
+          _ => console.log('set fail!')
+        );
+      });
+    },
+    error => {
+      console.log('读取OSS数据失败');
       throw error;
     }
   );
@@ -131,6 +150,22 @@ export function deleteOSS() {
     error => {
       console.log('读取OSS数据失败');
       throw error;
+    }
+  );
+}
+
+export function setCurrentBucket() {
+  getCurrentOSSAndBucketList().then(
+    ({ id, bucketList }) => {
+      showBucketList(bucketList, '设置').then(({ bucketId }) => {
+        setCurrentBucketDBItem(id, bucketId).then(
+          _ => console.log('set success!'),
+          _ => console.log('set fail!')
+        );
+      });
+    },
+    _ => {
+      console.log('请先指定OSS信息');
     }
   );
 }

@@ -62,6 +62,14 @@ export function saveBucketDB(BucketList: Array<BucketDBItem>) {
   return fs.writeJSON(getBucketDBPath(), BucketList);
 }
 
+export function setCurrentOSSDBItem(OSSId: string) {
+  return getOSSDB().then(OSSList => {
+    return saveOSSDB(
+      OSSList.map(OSS => ({ ...OSS, isCurrent: OSS.id === OSSId }))
+    );
+  });
+}
+
 export function addOSSDBItem(OSS: OSSDBItem) {
   return getOSSDB().then(OSSList => {
     OSSList.push({ ...OSS, isCurrent: !OSSList.length });
@@ -87,6 +95,16 @@ export function deleteOSSDBItem(OSSId: string) {
       }
     );
     return saveOSSDB(newOSSList);
+  });
+}
+
+export function setCurrentBucketDBItem(OSSId: string, bucketId: string) {
+  return getOSSDB().then(OSSList => {
+    return saveOSSDB(
+      OSSList.map(OSS =>
+        OSS.id === OSSId ? { ...OSS, bucket: bucketId } : { ...OSS }
+      )
+    );
   });
 }
 

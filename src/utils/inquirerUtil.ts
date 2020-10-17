@@ -96,7 +96,10 @@ export function getOSSInputInfo(
   ]);
 }
 
-export function showOSSList(OSSList: Array<OSSDBItem>, type: '删除' | '编辑') {
+export function showOSSList(
+  OSSList: Array<OSSDBItem>,
+  type: '设置' | '删除' | '编辑'
+) {
   return inquirer.prompt({
     type: 'list',
     name: 'OSSId',
@@ -147,7 +150,7 @@ export function getBucketInputInfo(): Promise<BucketInputInfo> {
 
 export function showBucketList(
   bucketList: Array<BucketDBItem>,
-  type: '编辑' | '删除'
+  type: '设置' | '编辑' | '删除'
 ) {
   return inquirer.prompt({
     type: 'list',
