@@ -1,6 +1,6 @@
 {
   "name": "aliyun-uploader",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "lib/main.js",
   "author": "yyzclyang",
   "license": "MIT",
