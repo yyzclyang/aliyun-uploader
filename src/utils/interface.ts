@@ -1,31 +1,29 @@
 /**
  * AliyunOSSInterface
  */
-export { Options as OSSOptions } from 'ali-oss';
+export { Options as AliyunOSSClientConfig } from 'ali-oss';
 export interface UploadFile {
   OSSPath: string;
   localPath: string;
 }
-export interface AccessKey {
-  accessKeyId: string;
-  accessKeySecret: string;
-}
-export interface BucketInfo {
+export interface BucketInputInfo {
   bucket: string;
   region: string;
 }
-export interface AliyunOSS {
-  OSSName: string;
-  accessKey: AccessKey;
-  currentBucket: string;
-  bucketList: Array<BucketInfo>;
+export interface BucketDBItem extends BucketInputInfo {
+  id: string;
+  oss: string;
 }
-export interface AliyunOSSConfig {
-  current: string;
-  aliyunOSSList: Array<AliyunOSS>;
-}
-export interface AliyunOSSInputInfo {
+export interface OSSInputInfo {
   OSSName: string;
   accessKeyId: string;
   accessKeySecret: string;
+}
+export interface OSSDBItem extends OSSInputInfo {
+  id: string;
+  isCurrent: boolean;
+  bucket: string;
+}
+export interface OSS extends OSSDBItem {
+  bucketList: Array<BucketDBItem>;
 }

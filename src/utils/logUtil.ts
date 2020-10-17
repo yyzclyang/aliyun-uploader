@@ -1,19 +1,19 @@
-import { AliyunOSS, AliyunOSSConfig, BucketInfo } from './interface';
+import { OSS, OSSDBItem, BucketDBItem } from './interface';
 
-export function logBucketInfo({ bucket, region }: BucketInfo, spaceNumber = 2) {
+export function logBucket({ bucket, region }: BucketDBItem, spaceNumber = 2) {
   console.log(`${spaceGenerator(spaceNumber)}bucket: ${bucket}`);
   console.log(`${spaceGenerator(spaceNumber)}region: ${region}`);
 }
 
 export function logBucketList(
-  bucketList: Array<BucketInfo>,
-  currentBucket: string,
+  bucketList: Array<BucketDBItem>,
+  currentBucketId: string,
   spaceNumber = 2
 ) {
-  bucketList.forEach(({ bucket, region }) => {
+  bucketList.forEach(({ id, bucket, region }) => {
     console.log(
       `${
-        bucket === currentBucket
+        id === currentBucketId
           ? '* ' + spaceGenerator(spaceNumber - 2)
           : spaceGenerator(spaceNumber)
       }${bucket}`
@@ -23,29 +23,22 @@ export function logBucketList(
   });
 }
 
-export function logAliyunOSSInfo(
-  { OSSName, accessKey, currentBucket, bucketList }: AliyunOSS,
+export function logOSS(
+  { OSSName, accessKeyId, accessKeySecret, bucket, bucketList }: OSS,
   spaceNumber = 2
 ) {
   console.log(`${spaceGenerator(spaceNumber)}OSS Name: ${OSSName}`);
+  console.log(`${spaceGenerator(spaceNumber)}accessKeyId: ${accessKeyId}`);
   console.log(
-    `${spaceGenerator(spaceNumber)}accessKeyId: ${accessKey.accessKeyId}`
-  );
-  console.log(
-    `${spaceGenerator(spaceNumber)}accessKeySecret: ${
-      accessKey.accessKeySecret
-    }`
+    `${spaceGenerator(spaceNumber)}accessKeySecret: ${accessKeySecret}`
   );
   console.log('OSS bucket list:');
-  logBucketList(bucketList, currentBucket, 4);
+  logBucketList(bucketList, bucket, 4);
 }
 
-export function logAliyunOSSList(aliyunOSSConfig: AliyunOSSConfig) {
-  const { current, aliyunOSSList } = aliyunOSSConfig;
-  aliyunOSSList.forEach(({ OSSName }) => {
-    console.log(
-      `${current === OSSName ? '* ' : spaceGenerator(2)}OSSName: ${OSSName}`
-    );
+export function logOSSList(OSSList: Array<OSSDBItem>) {
+  OSSList.forEach(({ isCurrent, OSSName }) => {
+    console.log(`${isCurrent ? '* ' : spaceGenerator(2)}OSSName: ${OSSName}`);
   });
 }
 

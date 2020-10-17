@@ -1,7 +1,12 @@
 import fs from 'fs-extra';
 import inquirer from 'inquirer';
-import { AliyunOSS, AliyunOSSInputInfo, BucketInfo } from './interface';
-import { getAliyunOSS, getAliyunOSSConfig } from './aliyunOSSUtil';
+import {
+  OSSDBItem,
+  OSSInputInfo,
+  BucketDBItem,
+  BucketInputInfo
+} from './interface';
+import { getBucketDB, getOSSDB } from './aliyunOSSUtil';
 
 export async function getRightLocalFileFolder(
   localFileFolder?: string
@@ -32,12 +37,12 @@ export async function getRightLocalFileFolder(
   }
 }
 
-export function getAliyunOSSInputInfo(
+export function getOSSInputInfo(
   defaultOSSName = '',
   defaultAccessKeyId = '',
   defaultAccessKeySecret = '',
   OSSNameUnique = true
-): Promise<AliyunOSSInputInfo> {
+): Promise<OSSInputInfo> {
   return inquirer.prompt([
     {
       type: 'input',
@@ -49,7 +54,7 @@ export function getAliyunOSSInputInfo(
           return 'OSSName不能为空';
         }
         if (OSSNameUnique) {
-          return getAliyunOSSConfig().then(({ aliyunOSSList }) => {
+          return getOSSDB().then(aliyunOSSList => {
             if (
               aliyunOSSList.some(aliyunOSS => aliyunOSS.OSSName === OSSName)
             ) {
@@ -91,22 +96,22 @@ export function getAliyunOSSInputInfo(
   ]);
 }
 
-export function showAliyunOSSList(
-  aliyunOSSList: Array<AliyunOSS>,
-  type: '删除' | '编辑'
-) {
+export function showOSSList(OSSList: Array<OSSDBItem>, type: '删除' | '编辑') {
   return inquirer.prompt({
     type: 'list',
-    name: 'OSSName',
+    name: 'OSSId',
     message: `选择你想要${type}的 OSS?`,
     choices: [
       { name: '退出', value: '' },
-      ...aliyunOSSList.map(aliyunOSS => aliyunOSS.OSSName)
+      ...OSSList.map(aliyunOSS => ({
+        name: aliyunOSS.OSSName,
+        value: aliyunOSS.id
+      }))
     ]
   });
 }
 
-export function getAliyunOSSBucketInputInfo(): Promise<BucketInfo> {
+export function getBucketInputInfo(): Promise<BucketInputInfo> {
   return inquirer.prompt([
     {
       type: 'input',
@@ -116,7 +121,7 @@ export function getAliyunOSSBucketInputInfo(): Promise<BucketInfo> {
         if (!bucket) {
           return 'bucket名称不能为空';
         }
-        return getAliyunOSS().then(({ bucketList }) => {
+        return getBucketDB().then(bucketList => {
           if (bucketList.some(bucketInfo => bucketInfo.bucket === bucket)) {
             return `${bucket}已存在，请输入其他名字`;
           } else {
@@ -140,17 +145,17 @@ export function getAliyunOSSBucketInputInfo(): Promise<BucketInfo> {
   ]);
 }
 
-export function showAliyunOSSBucketList(
-  bucketList: Array<BucketInfo>,
+export function showBucketList(
+  bucketList: Array<BucketDBItem>,
   type: '编辑' | '删除'
 ) {
   return inquirer.prompt({
     type: 'list',
-    name: 'bucketName',
+    name: 'bucketId',
     message: `选择你想要${type}的 bucket?`,
     choices: [
       { name: '退出', value: '' },
-      ...bucketList.map(({ bucket }) => bucket)
+      ...bucketList.map(({ bucket, id }) => ({ name: bucket, value: id }))
     ]
   });
 }

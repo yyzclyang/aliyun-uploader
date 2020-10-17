@@ -10,8 +10,12 @@ export function getUploaderHomePath() {
   return path.resolve(getHomePath(), './.aliyun-uploader');
 }
 
-export function getAliyunOSSConfigPath() {
-  return path.resolve(getUploaderHomePath(), 'config/aliyun-oss-config.json');
+export function getOSSDBPath() {
+  return path.resolve(getUploaderHomePath(), 'config/aliyun-oss-db.json');
+}
+
+export function getBucketDBPath() {
+  return path.resolve(getUploaderHomePath(), 'config/aliyun-bucket-db.json');
 }
 
 export function getLocalFilePathList(

@@ -1,36 +1,31 @@
+import { v4 as uuidV4 } from 'uuid';
 import AliyunOSSClient from './aliyunOSS';
 import {
-  getAliyunOSSConfig,
-  getAliyunOSS,
-  getAliyunOSSOptions,
-  addAliyunOSS,
-  editAliyunOSS,
-  deleteAliyunOSS,
-  getAliyunOSSBucket,
-  addAliyunOSSBucket,
-  deleteAliyunOSSBucket
+  getOSSDB,
+  getCurrentOSS,
+  getAliyunOSSClientConfig,
+  getCurrentOSSAndBucketList,
+  addOSSDBItem,
+  deleteOSSDBItem,
+  editOSSDBItem,
+  addBucketDBItem,
+  deleteBucketDBItem
 } from './utils/aliyunOSSUtil';
 import {
-  getAliyunOSSBucketInputInfo,
-  getAliyunOSSInputInfo,
-  getRightLocalFileFolder,
-  showAliyunOSSBucketList,
-  showAliyunOSSList
+  getOSSInputInfo,
+  getBucketInputInfo,
+  showOSSList,
+  showBucketList,
+  getRightLocalFileFolder
 } from './utils/inquirerUtil';
-import {
-  logAliyunOSSInfo,
-  logAliyunOSSList,
-  logBucketInfo,
-  logBucketList
-} from './utils/logUtil';
-import { AliyunOSS } from './utils/interface';
+import { logOSS, logOSSList, logBucket, logBucketList } from './utils/logUtil';
 
 export function uploader(OSSFolder: string, localFileFolder?: string) {
-  getAliyunOSSOptions().then(
-    aliyunOSSOptions => {
+  getAliyunOSSClientConfig().then(
+    ossConfig => {
       return getRightLocalFileFolder(localFileFolder).then(
         rightLocalFileFolder => {
-          return new AliyunOSSClient(aliyunOSSOptions)
+          return new AliyunOSSClient(ossConfig)
             .uploadLocalFileToAliyunOSS(OSSFolder, rightLocalFileFolder)
             .then(
               _ => console.log('upload success!'),
@@ -46,31 +41,30 @@ export function uploader(OSSFolder: string, localFileFolder?: string) {
 }
 
 export function showCurrentOSS() {
-  getAliyunOSS().then(aliyunOSS => {
+  getCurrentOSSAndBucketList().then(OSS => {
     console.log('current OSS info:');
-    logAliyunOSSInfo(aliyunOSS);
+    logOSS(OSS);
   });
 }
 
 export function showAllOSS() {
-  getAliyunOSSConfig().then(aliyunOSSConfig => {
+  getOSSDB().then(OSSList => {
     console.log('all OSS list:');
-    logAliyunOSSList(aliyunOSSConfig);
+    logOSSList(OSSList);
   });
 }
 
 export function addOSS() {
-  getAliyunOSSInputInfo().then(({ OSSName, accessKeyId, accessKeySecret }) => {
-    const aliyunOSS = {
+  getOSSInputInfo().then(({ OSSName, accessKeyId, accessKeySecret }) => {
+    const OSS = {
+      id: uuidV4(),
+      isCurrent: false,
       OSSName,
-      accessKey: {
-        accessKeyId,
-        accessKeySecret
-      },
-      currentBucket: '',
-      bucketList: []
+      accessKeyId,
+      accessKeySecret,
+      bucket: ''
     };
-    addAliyunOSS(aliyunOSS).then(
+    addOSSDBItem(OSS).then(
       _ => console.log('add success!'),
       _ => console.log('add fail!')
     );
@@ -78,71 +72,73 @@ export function addOSS() {
 }
 
 export function editOSS() {
-  getAliyunOSSConfig().then(({ aliyunOSSList }) => {
-    showAliyunOSSList(aliyunOSSList, '编辑').then(
-      ({ OSSName: selectedOSSName }) => {
-        if (selectedOSSName) {
-          const selectedAliyunOSS = aliyunOSSList.find(
-            aliyunOSS => aliyunOSS.OSSName === selectedOSSName
-          )!;
-          getAliyunOSSInputInfo(
-            selectedAliyunOSS.OSSName,
-            selectedAliyunOSS.accessKey.accessKeyId,
-            selectedAliyunOSS.accessKey.accessKeySecret,
-            false
-          ).then(({ OSSName, accessKeyId, accessKeySecret }) => {
-            const newAliyunOSS: AliyunOSS = {
-              OSSName,
-              accessKey: { accessKeyId, accessKeySecret },
-              currentBucket: selectedAliyunOSS.currentBucket,
-              bucketList: selectedAliyunOSS.bucketList
-            };
-            editAliyunOSS(newAliyunOSS, selectedOSSName).then(
-              _ => console.log('edit success!'),
-              _ => console.log('edit fail!')
-            );
-          });
-        }
+  getOSSDB().then(OSSList => {
+    showOSSList(OSSList, '编辑').then(({ OSSId: selectedOSSId }) => {
+      if (selectedOSSId) {
+        const selectedOSS = OSSList.find(OSS => OSS.id === selectedOSSId)!;
+        getOSSInputInfo(
+          selectedOSS.OSSName,
+          selectedOSS.accessKeyId,
+          selectedOSS.accessKeySecret,
+          false
+        ).then(({ OSSName, accessKeyId, accessKeySecret }) => {
+          const editedOSS = {
+            ...selectedOSS,
+            OSSName,
+            accessKeyId,
+            accessKeySecret
+          };
+          editOSSDBItem(editedOSS).then(
+            _ => console.log('edit success!'),
+            _ => console.log('edit fail!')
+          );
+        });
       }
-    );
+    });
   });
 }
 
 export function deleteOSS() {
-  getAliyunOSSConfig().then(({ aliyunOSSList }) => {
-    showAliyunOSSList(aliyunOSSList, '删除').then(
-      ({ OSSName: selectedOSSName }) => {
-        if (selectedOSSName) {
-          deleteAliyunOSS(selectedOSSName).then(
-            _ => console.log('delete success!'),
-            _ => console.log('delete fail!')
-          );
-        }
+  getOSSDB().then(OSSList => {
+    showOSSList(OSSList, '编辑').then(({ OSSId: selectedOSSId }) => {
+      if (selectedOSSId) {
+        deleteOSSDBItem(selectedOSSId).then(
+          _ => console.log('delete success!'),
+          _ => console.log('delete fail!')
+        );
       }
-    );
+    });
   });
 }
 
 export function showAllBucket() {
-  getAliyunOSS().then(aliyunOSS => {
+  getCurrentOSSAndBucketList().then(OSS => {
     console.log('all bucket list:');
-    const { bucketList, currentBucket } = aliyunOSS;
-    logBucketList(bucketList, currentBucket);
+    const { bucketList, bucket } = OSS;
+    logBucketList(bucketList, bucket);
   });
 }
 
 export function showCurrentBucket() {
-  getAliyunOSSBucket().then(bucket => {
+  getCurrentOSSAndBucketList().then(OSS => {
     console.log('current bucket info:');
-    logBucketInfo(bucket);
+    const { bucketList, bucket } = OSS;
+    const currentBucket = bucketList.find(({ id }) => id === bucket)!;
+    logBucket(currentBucket);
   });
 }
 
 export function addBucket() {
-  getAliyunOSS().then(
-    _ => {
-      getAliyunOSSBucketInputInfo().then(bucketInfo => {
-        addAliyunOSSBucket(bucketInfo).then(
+  getCurrentOSS().then(
+    ({ id }) => {
+      getBucketInputInfo().then(({ bucket, region }) => {
+        const bucketItem = {
+          id: uuidV4(),
+          oss: id,
+          bucket,
+          region
+        };
+        addBucketDBItem(bucketItem).then(
           _ => console.log('add success!'),
           _ => console.log('add fail!')
         );
@@ -154,12 +150,12 @@ export function addBucket() {
   );
 }
 export function deleteBucket() {
-  getAliyunOSS().then(
+  getCurrentOSSAndBucketList().then(
     ({ bucketList }) => {
-      showAliyunOSSBucketList(bucketList, '删除').then(({ bucketName }) => {
-        deleteAliyunOSSBucket(bucketName).then(
-          _ => console.log('add success!'),
-          _ => console.log('add fail!')
+      showBucketList(bucketList, '删除').then(({ bucketId }) => {
+        deleteBucketDBItem(bucketId).then(
+          _ => console.log('delete success!'),
+          _ => console.log('delete fail!')
         );
       });
     },
