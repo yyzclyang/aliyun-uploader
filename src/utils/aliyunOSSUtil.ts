@@ -63,6 +63,10 @@ export function saveBucketDB(BucketList: Array<BucketDBItem>) {
 }
 
 export function addOSSDBItem(OSS: OSSDBItem) {
+  const OSSDBIsExists = fs.pathExistsSync(getOSSDBPath());
+  if (!OSSDBIsExists) {
+    return saveOSSDB([{ ...OSS, isCurrent: true }]);
+  }
   return getOSSDB().then(OSSList => {
     OSSList.push(OSS);
     return saveOSSDB(OSSList);

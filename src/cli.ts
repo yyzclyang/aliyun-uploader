@@ -13,9 +13,20 @@ import {
   showCurrentOSS,
   uploader
 } from './main';
+import fs from 'fs-extra';
+import { getBucketDBPath, getOSSDBPath } from './utils/pathUtil';
+import { saveBucketDB, saveOSSDB } from './utils/aliyunOSSUtil';
 
-function main() {
+async function main() {
   program.version(pkg.version);
+  const OSSDBIsExists = fs.pathExistsSync(getOSSDBPath());
+  if (!OSSDBIsExists) {
+    await saveOSSDB([]);
+  }
+  const bucketDBIsExists = fs.pathExistsSync(getBucketDBPath());
+  if (!bucketDBIsExists) {
+    await saveBucketDB([]);
+  }
 
   // 展示 OSS 信息
   program

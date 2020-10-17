@@ -41,17 +41,29 @@ export function uploader(OSSFolder: string, localFileFolder?: string) {
 }
 
 export function showCurrentOSS() {
-  getCurrentOSSAndBucketList().then(OSS => {
-    console.log('current OSS info:');
-    logOSS(OSS);
-  });
+  getCurrentOSSAndBucketList().then(
+    OSS => {
+      console.log('current OSS info:');
+      logOSS(OSS);
+    },
+    error => {
+      console.log('请先指定OSS信息');
+      throw error;
+    }
+  );
 }
 
 export function showAllOSS() {
-  getOSSDB().then(OSSList => {
-    console.log('all OSS list:');
-    logOSSList(OSSList);
-  });
+  getOSSDB().then(
+    OSSList => {
+      console.log('all OSS list:');
+      logOSSList(OSSList);
+    },
+    error => {
+      console.log('读取OSS数据失败');
+      throw error;
+    }
+  );
 }
 
 export function addOSS() {
@@ -72,60 +84,84 @@ export function addOSS() {
 }
 
 export function editOSS() {
-  getOSSDB().then(OSSList => {
-    showOSSList(OSSList, '编辑').then(({ OSSId: selectedOSSId }) => {
-      if (selectedOSSId) {
-        const selectedOSS = OSSList.find(OSS => OSS.id === selectedOSSId)!;
-        getOSSInputInfo(
-          selectedOSS.OSSName,
-          selectedOSS.accessKeyId,
-          selectedOSS.accessKeySecret,
-          false
-        ).then(({ OSSName, accessKeyId, accessKeySecret }) => {
-          const editedOSS = {
-            ...selectedOSS,
-            OSSName,
-            accessKeyId,
-            accessKeySecret
-          };
-          editOSSDBItem(editedOSS).then(
-            _ => console.log('edit success!'),
-            _ => console.log('edit fail!')
-          );
-        });
-      }
-    });
-  });
+  getOSSDB().then(
+    OSSList => {
+      showOSSList(OSSList, '编辑').then(({ OSSId: selectedOSSId }) => {
+        if (selectedOSSId) {
+          const selectedOSS = OSSList.find(OSS => OSS.id === selectedOSSId)!;
+          getOSSInputInfo(
+            selectedOSS.OSSName,
+            selectedOSS.accessKeyId,
+            selectedOSS.accessKeySecret,
+            false
+          ).then(({ OSSName, accessKeyId, accessKeySecret }) => {
+            const editedOSS = {
+              ...selectedOSS,
+              OSSName,
+              accessKeyId,
+              accessKeySecret
+            };
+            editOSSDBItem(editedOSS).then(
+              _ => console.log('edit success!'),
+              _ => console.log('edit fail!')
+            );
+          });
+        }
+      });
+    },
+    error => {
+      console.log('读取OSS数据失败');
+      throw error;
+    }
+  );
 }
 
 export function deleteOSS() {
-  getOSSDB().then(OSSList => {
-    showOSSList(OSSList, '编辑').then(({ OSSId: selectedOSSId }) => {
-      if (selectedOSSId) {
-        deleteOSSDBItem(selectedOSSId).then(
-          _ => console.log('delete success!'),
-          _ => console.log('delete fail!')
-        );
-      }
-    });
-  });
+  getOSSDB().then(
+    OSSList => {
+      showOSSList(OSSList, '编辑').then(({ OSSId: selectedOSSId }) => {
+        if (selectedOSSId) {
+          deleteOSSDBItem(selectedOSSId).then(
+            _ => console.log('delete success!'),
+            _ => console.log('delete fail!')
+          );
+        }
+      });
+    },
+    error => {
+      console.log('读取OSS数据失败');
+      throw error;
+    }
+  );
 }
 
 export function showAllBucket() {
-  getCurrentOSSAndBucketList().then(OSS => {
-    console.log('all bucket list:');
-    const { bucketList, bucket } = OSS;
-    logBucketList(bucketList, bucket);
-  });
+  getCurrentOSSAndBucketList().then(
+    OSS => {
+      console.log('all bucket list:');
+      const { bucketList, bucket } = OSS;
+      logBucketList(bucketList, bucket);
+    },
+    error => {
+      console.log('读取数据失败');
+      throw error;
+    }
+  );
 }
 
 export function showCurrentBucket() {
-  getCurrentOSSAndBucketList().then(OSS => {
-    console.log('current bucket info:');
-    const { bucketList, bucket } = OSS;
-    const currentBucket = bucketList.find(({ id }) => id === bucket)!;
-    logBucket(currentBucket);
-  });
+  getCurrentOSSAndBucketList().then(
+    OSS => {
+      console.log('current bucket info:');
+      const { bucketList, bucket } = OSS;
+      const currentBucket = bucketList.find(({ id }) => id === bucket)!;
+      logBucket(currentBucket);
+    },
+    error => {
+      console.log('读取数据失败');
+      throw error;
+    }
+  );
 }
 
 export function addBucket() {
