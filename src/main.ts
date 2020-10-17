@@ -79,43 +79,47 @@ export function addOSS() {
 
 export function editOSS() {
   getAliyunOSSConfig().then(({ aliyunOSSList }) => {
-    showAliyunOSSList(aliyunOSSList).then(({ OSSName: selectedOSSName }) => {
-      if (selectedOSSName) {
-        const selectedAliyunOSS = aliyunOSSList.find(
-          aliyunOSS => aliyunOSS.OSSName === selectedOSSName
-        )!;
-        getAliyunOSSInputInfo(
-          selectedAliyunOSS.OSSName,
-          selectedAliyunOSS.accessKey.accessKeyId,
-          selectedAliyunOSS.accessKey.accessKeySecret,
-          false
-        ).then(({ OSSName, accessKeyId, accessKeySecret }) => {
-          const newAliyunOSS: AliyunOSS = {
-            OSSName,
-            accessKey: { accessKeyId, accessKeySecret },
-            currentBucket: selectedAliyunOSS.currentBucket,
-            bucketList: selectedAliyunOSS.bucketList
-          };
-          editAliyunOSS(newAliyunOSS, selectedOSSName).then(
-            _ => console.log('edit success!'),
-            _ => console.log('edit fail!')
-          );
-        });
+    showAliyunOSSList(aliyunOSSList, '编辑').then(
+      ({ OSSName: selectedOSSName }) => {
+        if (selectedOSSName) {
+          const selectedAliyunOSS = aliyunOSSList.find(
+            aliyunOSS => aliyunOSS.OSSName === selectedOSSName
+          )!;
+          getAliyunOSSInputInfo(
+            selectedAliyunOSS.OSSName,
+            selectedAliyunOSS.accessKey.accessKeyId,
+            selectedAliyunOSS.accessKey.accessKeySecret,
+            false
+          ).then(({ OSSName, accessKeyId, accessKeySecret }) => {
+            const newAliyunOSS: AliyunOSS = {
+              OSSName,
+              accessKey: { accessKeyId, accessKeySecret },
+              currentBucket: selectedAliyunOSS.currentBucket,
+              bucketList: selectedAliyunOSS.bucketList
+            };
+            editAliyunOSS(newAliyunOSS, selectedOSSName).then(
+              _ => console.log('edit success!'),
+              _ => console.log('edit fail!')
+            );
+          });
+        }
       }
-    });
+    );
   });
 }
 
 export function deleteOSS() {
   getAliyunOSSConfig().then(({ aliyunOSSList }) => {
-    showAliyunOSSList(aliyunOSSList).then(({ OSSName: selectedOSSName }) => {
-      if (selectedOSSName) {
-        deleteAliyunOSS(selectedOSSName).then(
-          _ => console.log('delete success!'),
-          _ => console.log('delete fail!')
-        );
+    showAliyunOSSList(aliyunOSSList, '删除').then(
+      ({ OSSName: selectedOSSName }) => {
+        if (selectedOSSName) {
+          deleteAliyunOSS(selectedOSSName).then(
+            _ => console.log('delete success!'),
+            _ => console.log('delete fail!')
+          );
+        }
       }
-    });
+    );
   });
 }
 
@@ -152,7 +156,7 @@ export function addBucket() {
 export function deleteBucket() {
   getAliyunOSS().then(
     ({ bucketList }) => {
-      showAliyunOSSBucketList(bucketList).then(({ bucketName }) => {
+      showAliyunOSSBucketList(bucketList, '删除').then(({ bucketName }) => {
         deleteAliyunOSSBucket(bucketName).then(
           _ => console.log('add success!'),
           _ => console.log('add fail!')

@@ -91,11 +91,14 @@ export function getAliyunOSSInputInfo(
   ]);
 }
 
-export function showAliyunOSSList(aliyunOSSList: Array<AliyunOSS>) {
+export function showAliyunOSSList(
+  aliyunOSSList: Array<AliyunOSS>,
+  type: '删除' | '编辑'
+) {
   return inquirer.prompt({
     type: 'list',
     name: 'OSSName',
-    message: '选择你想要编辑的 OSS?',
+    message: `选择你想要${type}的 OSS?`,
     choices: [
       { name: '退出', value: '' },
       ...aliyunOSSList.map(aliyunOSS => aliyunOSS.OSSName)
@@ -137,11 +140,14 @@ export function getAliyunOSSBucketInputInfo(): Promise<BucketInfo> {
   ]);
 }
 
-export function showAliyunOSSBucketList(bucketList: Array<BucketInfo>) {
+export function showAliyunOSSBucketList(
+  bucketList: Array<BucketInfo>,
+  type: '编辑' | '删除'
+) {
   return inquirer.prompt({
     type: 'list',
     name: 'bucketName',
-    message: '选择你想要编辑的 bucket?',
+    message: `选择你想要${type}的 bucket?`,
     choices: [
       { name: '退出', value: '' },
       ...bucketList.map(({ bucket }) => bucket)
