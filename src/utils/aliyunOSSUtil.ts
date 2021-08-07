@@ -137,10 +137,10 @@ export function addBucketDBItem(bucket: BucketDBItem) {
 export function deleteBucketDBItem(bucketId: string) {
   return getBucketDB().then(bucketList => {
     return getOSSDB().then(OSSList => {
-      if (OSSList.find(OSS => OSS.bucket === bucketId)) {
+      if (OSSList.some(OSS => OSS.bucket === bucketId)) {
         const newOSSList = OSSList.map(OSS => {
           if (OSS.bucket === bucketId) {
-            return { ...OSS, bucket: bucketList[0]?.id ?? '' };
+            return { ...OSS, bucket: '' };
           } else {
             return OSS;
           }
