@@ -1,4 +1,5 @@
 import fs from 'fs-extra';
+import path from 'path';
 import { getBucketDBPath, getOSSDBPath } from './pathUtil';
 import {
   OSS,
@@ -55,11 +56,15 @@ export function getAliyunOSSClientConfig(): Promise<AliyunOSSClientConfig> {
 }
 
 export function saveOSSDB(OSSList: Array<OSSDBItem>) {
-  return fs.writeJSON(getOSSDBPath(), OSSList);
+  return fs.ensureDir(path.dirname(getOSSDBPath())).then(() => {
+    return fs.writeJSON(getOSSDBPath(), OSSList);
+  });
 }
 
 export function saveBucketDB(BucketList: Array<BucketDBItem>) {
-  return fs.writeJSON(getBucketDBPath(), BucketList);
+  return fs.ensureDir(path.dirname(getBucketDBPath())).then(() => {
+    return fs.writeJSON(getBucketDBPath(), BucketList);
+  });
 }
 
 export function setCurrentOSSDBItem(OSSId: string) {

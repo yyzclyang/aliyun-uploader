@@ -107,7 +107,7 @@ async function main() {
 
   // 上传文件
   program
-    .command('upload <OSSFolder> [localFileFolder]', { isDefault: true })
+    .command('upload <OSSFolder> [localFileFolder]')
     .description('upload local folder files to aliyun OSS')
     .action((OSSFolder, localFileFolder) => {
       uploader(OSSFolder, localFileFolder);
