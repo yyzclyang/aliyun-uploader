@@ -94,11 +94,16 @@ export function editOSSDBItem(editedOSS: OSSDBItem) {
 
 export function deleteOSSDBItem(OSSId: string) {
   return getOSSDB().then(OSSList => {
-    const newOSSList = OSSList.filter(OSS => OSS.id !== OSSId).map(
-      (OSS, index) => {
-        return index === 0 ? { ...OSS, isCurrent: true } : OSS;
-      }
-    );
+    const newOSSList = OSSList.filter(OSS => OSS.id !== OSSId);
+    const hasDefaultOSS = newOSSList.some(OSS => OSS.isCurrent);
+    if (!hasDefaultOSS) {
+      newOSSList.forEach((OSS, index) => {
+        if (index === 0) {
+          OSS.isCurrent = true;
+        }
+      });
+    }
+
     return saveOSSDB(newOSSList);
   });
 }

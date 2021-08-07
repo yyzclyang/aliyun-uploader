@@ -138,7 +138,7 @@ export function editOSS() {
 export function deleteOSS() {
   getOSSDB().then(
     OSSList => {
-      showOSSList(OSSList, '编辑').then(({ OSSId: selectedOSSId }) => {
+      showOSSList(OSSList, '删除').then(({ OSSId: selectedOSSId }) => {
         if (selectedOSSId) {
           deleteOSSDBItem(selectedOSSId).then(
             _ => console.log('delete success!'),
